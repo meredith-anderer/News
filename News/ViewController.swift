@@ -30,6 +30,19 @@ class ViewController: UIViewController {
         model.getArticles()
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Make sure the segue is actually to a detail VC/ get reference to it.
+        if let detailVC = segue.destination as? ArticleDetailViewController {
+            // Detect the index path the user selected
+            guard let indexPath = tableView.indexPathForSelectedRow else { return }
+            
+            //Get the article the user tapped on
+            if indexPath.row < articles.count {
+                let article = self.articles[indexPath.row]
+                detailVC.articleURL = article.url
+            }
+        }
+    }
 }
 
 extension ViewController:  UITableViewDelegate, UITableViewDataSource {
