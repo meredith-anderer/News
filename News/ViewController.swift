@@ -21,8 +21,8 @@ class ViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         // Dynamic row heights
-        //tableView.estimatedRowHeight = 100
-       // tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 100
+        tableView.rowHeight = UITableView.automaticDimension
         
         // Set delegate for the model
         model.delegate = self

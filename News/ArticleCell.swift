@@ -25,27 +25,36 @@ class ArticleCell: UITableViewCell {
         // Set the headline
         headlineLabel.text = articleToDisplay?.title
         
-        // Download and display the image
-        if let imageUrlString = articleToDisplay?.urlToImage, let url = URL(string: imageUrlString) {
-            let session = URLSession.shared
-            let dataTask = session.dataTask(with: url, completionHandler: {data, response, error in
-                if let data = data, error == nil {
-                    // Check to make sure that the url string the data task went off to download matches the article this cell is set to display
-                    if self.articleToDisplay?.urlToImage == imageUrlString {
-                        DispatchQueue.main.async {
-                            self.articleImageView.image = UIImage(data: data)
+        // Retrieve and display the image
+        if let imageUrlString = articleToDisplay?.urlToImage{
+            // Check if the image is in the cache
+            if let imageData = CacheManager.retrieveData(imageUrlString){
+                self.articleImageView.image = UIImage(data: imageData)
+            }
+            // If the image isn't in the cache already, download it (and add it to the cache)
+
+            else if let url = URL(string: imageUrlString) {
+                let session = URLSession.shared
+                let dataTask = session.dataTask(with: url, completionHandler: {data, response, error in
+                    if let data = data, error == nil {
+                        // Save the image to the cache
+                        CacheManager.saveData(imageUrlString, data)
+                        // Check to make sure that the url string the data task went off to download matches the article this cell is set to display
+                        if self.articleToDisplay?.urlToImage == imageUrlString {
+                            DispatchQueue.main.async {
+                                self.articleImageView.image = UIImage(data: data)
+                            }
                         }
+                    } else {
+                        // Either there is an error or data returned is nil
+                        return
                     }
-                } else {
-                    // Either there is an error or data returned is nil
-                    return
-                }
-            })
-            
-            dataTask.resume()
+                })
+                
+                dataTask.resume()
+            }
         } else {
-            // Couldn't create image from URL
-            // TO DO - make place holder image to use instead?
+            // No image URL associated with this article
             return
         }
     }
