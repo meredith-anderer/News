@@ -30,19 +30,12 @@ class ViewController: UIViewController {
         model.getArticles()
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Make sure the segue is actually to a detail VC/ get reference to it.
-        if let detailVC = segue.destination as? ArticleDetailViewController {
-            // Detect the index path the user selected
-            guard let indexPath = tableView.indexPathForSelectedRow else { return }
-            
-            //Get the article the user tapped on
-            if indexPath.row < articles.count {
-                let article = self.articles[indexPath.row]
-                detailVC.articleURL = article.url
-            }
+    override func viewDidAppear(_ animated: Bool) {
+        if let selectedIndexPath = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selectedIndexPath, animated: true)
         }
     }
+    
 }
 
 extension ViewController:  UITableViewDelegate, UITableViewDataSource {
@@ -62,9 +55,17 @@ extension ViewController:  UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // TO DO
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ArticleCell", for: indexPath)
+        // Potential TO DO: do layout/ subview creation programmatically instead of in storyboard so can instantiate without referencing storyboard
+        guard let detailVC = storyboard?.instantiateViewController(withIdentifier: "ArticleDetailVC") as? ArticleDetailViewController else {return}
 
+        if indexPath.row < articles.count {
+            let articleForCell = self.articles[indexPath.row]
+            detailVC.articleURL = articleForCell.url
+        }
+        let segue =  UIStoryboardSegue.init(identifier: "detailSegue", source: self, destination: detailVC, performHandler: {
+            self.navigationController?.pushViewController(detailVC, animated: true)
+        })
+        segue.perform()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
