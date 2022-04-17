@@ -95,11 +95,16 @@
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="Q4a-CU-C1q">
+                                <rect key="frame" x="197" y="438" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="f9Y-fO-Xuh"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="Q4a-CU-C1q" firstAttribute="centerY" secondItem="58n-h9-OqQ" secondAttribute="centerY" id="4hA-7r-7Bn"/>
                             <constraint firstItem="f9Y-fO-Xuh" firstAttribute="trailing" secondItem="60O-j2-8bS" secondAttribute="trailing" id="88k-11-V2a"/>
+                            <constraint firstItem="Q4a-CU-C1q" firstAttribute="centerX" secondItem="58n-h9-OqQ" secondAttribute="centerX" id="E1f-ga-clP"/>
                             <constraint firstAttribute="bottom" secondItem="60O-j2-8bS" secondAttribute="bottom" id="KWH-kf-YS6"/>
                             <constraint firstItem="60O-j2-8bS" firstAttribute="leading" secondItem="f9Y-fO-Xuh" secondAttribute="leading" id="fOW-8c-zqB"/>
                             <constraint firstItem="60O-j2-8bS" firstAttribute="top" secondItem="f9Y-fO-Xuh" secondAttribute="top" id="mdn-Sp-85k"/>
@@ -107,6 +112,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="hlI-Xl-s3u"/>
                     <connections>
+                        <outlet property="spinner" destination="Q4a-CU-C1q" id="h7S-A4-Pie"/>
                         <outlet property="webView" destination="60O-j2-8bS" id="fwq-G1-v2R"/>
                     </connections>
                 </viewController>

@@ -17,7 +17,9 @@ class ArticleCell: UITableViewCell {
     func displayArticle(_ article: Article) {
         // Clean up the cell before displaying the next article
         articleImageView.image = nil
+        articleImageView.alpha = 0
         headlineLabel.text = ""
+        headlineLabel.alpha = 0
         
         // Keep a reference to the article
         articleToDisplay = article
@@ -25,11 +27,16 @@ class ArticleCell: UITableViewCell {
         // Set the headline
         headlineLabel.text = articleToDisplay?.title
         
+        // ANimate the label into view
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut, animations: {
+            self.headlineLabel.alpha = 1
+        }, completion: nil)
+        
         // Retrieve and display the image
         if let imageUrlString = articleToDisplay?.urlToImage{
             // Check if the image is in the cache
             if let imageData = CacheManager.retrieveData(imageUrlString){
-                self.articleImageView.image = UIImage(data: imageData)
+                setImageForImageView(imageData)
             }
             // If the image isn't in the cache already, download it (and add it to the cache)
 
@@ -42,7 +49,7 @@ class ArticleCell: UITableViewCell {
                         // Check to make sure that the url string the data task went off to download matches the article this cell is set to display
                         if self.articleToDisplay?.urlToImage == imageUrlString {
                             DispatchQueue.main.async {
-                                self.articleImageView.image = UIImage(data: data)
+                                self.setImageForImageView(data)
                             }
                         }
                     } else {
@@ -57,6 +64,14 @@ class ArticleCell: UITableViewCell {
             // No image URL associated with this article
             return
         }
+    }
+    
+    private func setImageForImageView(_ imageData: Data){
+        self.articleImageView.image = UIImage(data: imageData)
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut, animations: {
+            self.articleImageView.alpha = 1
+        }, completion: nil)
+        
     }
     
     override func awakeFromNib() {

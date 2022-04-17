@@ -11,13 +11,14 @@ import WebKit
 class ArticleDetailViewController: UIViewController {
 
     @IBOutlet weak var webView: WKWebView!
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
     
     var articleURL: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        webView.navigationDelegate = self
+        spinner.hidesWhenStopped = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -25,9 +26,19 @@ class ArticleDetailViewController: UIViewController {
         if let articleURL = articleURL, let url = URL(string: articleURL) {
             // Create the URLRequest object
             let request = URLRequest(url: url)
+            
+            // Start spinner
+            spinner.startAnimating()
             // Load it in the webview
             webView.load(request)
         }
     }
 
+}
+
+extension ArticleDetailViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        // Stop the spinner and hide it
+        spinner.stopAnimating()
+    }
 }
